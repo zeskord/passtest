@@ -1,4 +1,5 @@
 const express = require('express')
+var session = require('express-session')
 const path = require('path')
 const fs = require('fs')
 var passport = require('passport')
@@ -36,8 +37,9 @@ passport.use(new GoogleStrategy({
     }
 ))
 
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(session({ secret: "cats" }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
