@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const googleSecret = fs.readFileSync('./googleSecret.json')
+const googleSecret = JSON.parse(fs.readFileSync('./googleSecret.json', "utf8"))
 
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
