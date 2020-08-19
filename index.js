@@ -27,7 +27,7 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://zeskord.site/auth/google/callback"
 },
     function (accessToken, refreshToken, profile, done) {
-        console.log(profile)
+        //console.log(profile)
         var user = { id: profile.id }
         return done(null, user)
         // Вот тут надо по-другому.
@@ -52,7 +52,8 @@ app.use(passport.session());
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get('/', function (req, res) {
-    res.render("index", {req: req})
+    console.log(req)
+    res.render("index", {})
 })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
