@@ -28,7 +28,11 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, done) {
         //console.log(profile)
-        var user = { id: profile.id }
+        var user = {
+            id: profile.id,
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        }
         return done(null, user)
         // Вот тут надо по-другому.
         // User.findOrCreate({ googleId: profile.id }, function (err, user) {
