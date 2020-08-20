@@ -17,6 +17,12 @@ app.set('view engine', 'ejs');
 
 const googleSecret = JSON.parse(fs.readFileSync('./googleSecret.json', "utf8"))
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const users = [] // Массив пользователей
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google
@@ -33,6 +39,9 @@ passport.use(new GoogleStrategy({
             accessToken: accessToken,
             refreshToken: refreshToken
         }
+
+        //foundUser = users.find(u => u.id === user.id)
+
         return done(null, user)
         // Вот тут надо по-другому.
         // User.findOrCreate({ googleId: profile.id }, function (err, user) {
@@ -42,7 +51,7 @@ passport.use(new GoogleStrategy({
 ))
 
 passport.serializeUser(function (user, done) {
-    done(null, user);
+    done(null, user.id);
 });
 
 passport.deserializeUser(function (user, done) {
@@ -55,9 +64,23 @@ app.use(passport.session());
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.get('/', function (req, res) {
-    console.log(req)
+app.get('/', checkAuthentication, function (req, res) {
+    //console.log(req)
     res.render("index", {})
+})
+
+function checkAuthentication(req,res,next){
+    if(req.isAuthenticated()){
+        //req.isAuthenticated() will return true if user is logged in
+        next();
+    } else{
+        res.redirect("/auth/google")
+    }
+}
+
+app.get('/logout', function (req, res) {
+    req.logout()
+    res.redirect('/')
 })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +102,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     function (req, res) {
-        console.log("Успешно!")
+        //console.log("Успешно!")
         res.redirect('/')
     })
 
